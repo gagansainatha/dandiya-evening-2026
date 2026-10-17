@@ -148,7 +148,7 @@ function AdminPage() {
       </Shell>
     );
 
-  const attCounts = countBy(rows, ATTENDANCE, (r) => r.attendance);
+  const attCounts = countBy(rows, ATTENDANCE, (r) => r.attendance) as [{ k: string; n: number }, { k: string; n: number }, { k: string; n: number }, { k: string; n: number }];
 
   return (
     <Shell onSignOut={signOut}>
