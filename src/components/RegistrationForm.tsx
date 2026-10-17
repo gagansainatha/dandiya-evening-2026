@@ -57,7 +57,7 @@ function Req() {
   return <span className="text-saffron" aria-hidden="true"> *</span>;
 }
 
-function FieldError({ id, msg }: { id: string; msg?: string }) {
+function FieldError({ id, msg }: { id: string; msg?: string | undefined }) {
   if (!msg) return null;
   return <p id={id} className="text-sm text-destructive">{msg}</p>;
 }
