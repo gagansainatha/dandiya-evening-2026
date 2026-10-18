@@ -47,13 +47,9 @@ function Index() {
         observer.unobserve(entry.target);
       }
     }, { threshold: 0.08 });
-    sections.forEach((section) => {
-      section.classList.add("reveal-pending");
-      observer.observe(section);
-    });
+    sections.forEach((section) => observer.observe(section));
     return () => {
       observer.disconnect();
-      sections.forEach((section) => section.classList.remove("reveal-pending"));
     };
   }, []);
 
@@ -67,10 +63,10 @@ function Index() {
           </a>
           <nav aria-label="Main" className="hidden gap-6 text-sm md:flex">
             {NAV.map(([label, id]) => (
-              <a key={id} href={`#${id}`} className="text-muted-foreground transition-colors duration-200 hover:text-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">{label}</a>
+              <a key={id} href={`#${id}`} className="nav-link text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">{label}</a>
             ))}
           </nav>
-          <Button size="sm" className="shrink-0 transition-all duration-200" onClick={scrollToForm}>Register</Button>
+          <Button size="sm" className="register-button shrink-0" onClick={scrollToForm}>Register</Button>
         </div>
       </header>
 
@@ -85,12 +81,12 @@ function Index() {
               <h1 className="hero-enter text-[44px] font-bold leading-[1.1] text-gold-gradient sm:text-6xl lg:text-7xl">Dandiya Evening <span className="block">2026</span></h1>
               <p className="hero-enter font-display text-xl italic text-gold sm:text-2xl">Tradition Meets Togetherness</p>
               <div className="hero-enter festive-rule mx-auto w-32" />
-              <div className="hero-enter flex flex-col gap-3 text-sm sm:flex-row sm:justify-center sm:gap-8 sm:text-base">
-                <span className="flex items-center justify-center gap-2"><CalendarDays className="h-5 w-5 text-saffron" aria-hidden="true" /> Saturday, 24 October 2026</span>
-                <span className="flex items-center justify-center gap-2"><MapPin className="h-5 w-5 text-magenta" aria-hidden="true" /> VVIT, Bengaluru</span>
+              <div className="flex flex-col gap-3 text-sm sm:flex-row sm:justify-center sm:gap-8 sm:text-base">
+                <span className="hero-fact flex items-center justify-center gap-2"><CalendarDays className="h-5 w-5 text-saffron" aria-hidden="true" /> Saturday, 24 October 2026</span>
+                <span className="hero-fact flex items-center justify-center gap-2"><MapPin className="h-5 w-5 text-magenta" aria-hidden="true" /> VVIT, Bengaluru</span>
               </div>
               <div className="hero-enter flex justify-center">
-                <Button size="lg" className="px-10 text-base shadow-[var(--shadow-glow)] transition-all duration-200 hover:-translate-y-0.5" onClick={scrollToForm}>Register</Button>
+                <Button size="lg" className="register-button px-10 text-base shadow-[var(--shadow-glow)]" onClick={scrollToForm}>Register</Button>
               </div>
             </div>
           </div>
@@ -130,8 +126,8 @@ function Index() {
                 { icon: Music, t: "Ramp walk" },
                 { icon: Store, t: "Stalls" },
               ].map(({ icon: Icon, t }) => (
-                <div key={t} className="festive-card flex flex-col items-center gap-3 p-6 text-center transition-transform hover:-translate-y-1">
-                  <Icon className="h-8 w-8 text-gold" aria-hidden="true" />
+                <div key={t} data-reveal className="participation-card festive-card flex flex-col items-center gap-3 p-6 text-center">
+                  <Icon className="participation-icon h-8 w-8 text-gold" aria-hidden="true" />
                   <span className="font-medium">{t}</span>
                 </div>
               ))}
@@ -143,7 +139,7 @@ function Index() {
         </section>
 
         {/* Register */}
-        <section id="register" className="mx-auto max-w-6xl scroll-mt-24 px-4 py-16">
+        <section id="register" data-reveal className="mx-auto max-w-6xl scroll-mt-24 px-4 py-16">
           <h2 className="text-center text-3xl font-semibold sm:text-4xl">Register</h2>
           <p className="mx-auto mb-10 mt-3 max-w-xl text-center text-muted-foreground">
             One registration per student. It takes about two minutes.
@@ -181,7 +177,7 @@ function Index() {
         </section>
       </main>
 
-      <footer className="border-t py-8">
+      <footer data-reveal className="border-t py-8">
         <div className="mx-auto flex max-w-6xl flex-col items-center gap-3 px-4 text-center text-sm text-muted-foreground">
           <div className="festive-rule w-24" />
           <p className="font-display text-base text-foreground">Dandiya Evening 2026</p>

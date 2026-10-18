@@ -70,6 +70,8 @@
   --gradient-gold-text: linear-gradient(180deg, oklch(0.95 0.06 90), oklch(0.8 0.15 70));
   --shadow-glow: 0 20px 60px -20px oklch(0.74 0.17 55 / 45%);
   --shadow-card: 0 10px 40px -15px oklch(0.05 0.02 268 / 70%);
+  --shadow-card-hover: 0 14px 42px -15px oklch(0.05 0.02 268 / 78%);
+  --motion-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --hero-overlay: linear-gradient(180deg, oklch(0.17 0.045 268 / 22%) 0%, oklch(0.17 0.045 268 / 56%) 32%, oklch(0.17 0.045 268 / 65%) 76%, var(--background) 100%);
 }
 
@@ -128,18 +130,61 @@
 }
 
 .hero-overlay { background: var(--hero-overlay); }
-.hero-background { object-position: center; animation: hero-drift 32s ease-in-out infinite alternate; }
-.hero-enter { animation: fade-up 0.7s ease-out both; }
-.hero-enter:nth-child(2) { animation-delay: 0.1s; }
-.hero-enter:nth-child(3) { animation-delay: 0.2s; }
-.hero-enter:nth-child(4) { animation-delay: 0.25s; }
-.hero-enter:nth-child(5) { animation-delay: 0.3s; }
+.hero-background { object-position: center; animation: hero-drift 14s var(--motion-ease-out) forwards; }
+.hero-enter { animation: hero-entrance 0.85s var(--motion-ease-out) backwards; }
+.hero-enter:nth-child(1) { animation-name: gentle-fade; }
+.hero-enter:nth-child(2) { animation-delay: 0.08s; }
+.hero-enter:nth-child(3) { animation-name: gentle-fade; animation-delay: 0.16s; }
+.hero-enter:nth-child(4) { animation-name: gentle-fade; animation-delay: 0.2s; }
+.hero-fact { animation: hero-entrance 0.7s var(--motion-ease-out) backwards; }
+.hero-fact:first-child { animation-delay: 0.24s; }
+.hero-fact:last-child { animation-delay: 0.32s; }
 .hero-enter:nth-child(6) { animation-delay: 0.4s; }
-[data-reveal].reveal-pending { opacity: 0; transform: translateY(14px); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
-[data-reveal].is-revealed { opacity: 1; transform: none; }
+/* Content is visible by default, including before hydration or if observation fails. */
+[data-reveal].is-revealed { animation: section-entrance 0.65s var(--motion-ease-out) backwards; }
+[data-reveal]:focus-within { animation: none; }
+.nav-link { position: relative; transition: color 0.2s ease-out; }
+.nav-link::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 -5px;
+  height: 1px;
+  background: var(--gold);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.2s ease-out;
+}
+.nav-link:hover, .nav-link:focus-visible { color: var(--gold); }
+.nav-link:hover::after, .nav-link:focus-visible::after { transform: scaleX(1); }
+.register-button {
+  transition: background-color 0.2s ease-out, box-shadow 0.2s ease-out, transform 0.2s ease-out;
+}
+.register-button:active:not(:disabled) { transform: translateY(1px); }
+.participation-card {
+  transition: transform 0.25s var(--motion-ease-out), border-color 0.25s ease-out, box-shadow 0.25s ease-out;
+}
+.participation-icon { transition: transform 0.25s var(--motion-ease-out); }
+@media (hover: hover) and (pointer: fine) {
+  .register-button:hover:not(:disabled) { transform: translateY(-2px); }
+  .register-button:active:not(:disabled) { transform: translateY(1px); }
+  .participation-card:hover { transform: translateY(-3px); border-color: var(--gold); box-shadow: var(--shadow-card-hover); }
+  .participation-card:hover .participation-icon { transform: translateY(-1px); }
+}
+.registration-form :is(input, select, textarea, label, [role="checkbox"]) {
+  transition: border-color 0.2s ease-out, background-color 0.2s ease-out, box-shadow 0.2s ease-out;
+}
+.registration-form :is(input, select, textarea)[aria-invalid="true"] { border-color: var(--destructive); }
+.field-enter, .validation-feedback { animation: field-entrance 0.25s ease-out; }
+.success-enter { animation: section-entrance 0.5s var(--motion-ease-out); }
+.saving-icon { animation: saving-spin 1s linear infinite; }
 @keyframes hero-drift { from { transform: scale(1); } to { transform: scale(1.035); } }
+@keyframes hero-entrance { from { opacity: 0.65; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+@keyframes gentle-fade { from { opacity: 0.65; } to { opacity: 1; } }
+@keyframes section-entrance { from { opacity: 0.6; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+@keyframes field-entrance { from { opacity: 0.6; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+@keyframes saving-spin { to { transform: rotate(360deg); } }
 @media (max-width: 639px) { .hero-background { object-position: 52% center; } }
 @media (prefers-reduced-motion: reduce) {
-  .hero-enter, [data-reveal].reveal-pending { opacity: 1; transform: none; }
-  .hero-background { transform: none; }
+  .hero-enter, .hero-fact, [data-reveal], .field-enter, .validation-feedback, .success-enter { opacity: 1; transform: none; }
+  .hero-background, .register-button, .participation-card, .participation-icon { transform: none !important; }
 }
