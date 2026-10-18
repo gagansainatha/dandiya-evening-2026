@@ -23,7 +23,9 @@ export const ACTIVITIES = [
   "Stall",
   "Other",
 ] as const;
-export const SEMESTERS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as const;
+export const SEMESTERS = [1, 2, 3, 4, 5, 6, 7] as const;
+export const semesterLabel = (semester: number) =>
+  `${semester}${semester === 1 ? "st" : semester === 2 ? "nd" : semester === 3 ? "rd" : "th"} Semester`;
 
 const optText = (max: number) =>
   z.string().trim().max(max, `Must be under ${max} characters`).optional().transform((v) => (v ? v : undefined));
@@ -38,7 +40,7 @@ export const registrationSchema = z
       .transform(normaliseUsn)
       .pipe(z.string().regex(/^[A-Z0-9]{4,20}$/, "Enter a valid USN (letters and numbers only)")),
     department: z.enum(DEPARTMENTS, { message: "Please choose your department" }),
-    semester: z.coerce.number().int().min(1, "Please choose your semester").max(10),
+    semester: z.coerce.number().int().min(1, "Please choose your semester").max(7, "Please choose a semester from 1 to 7"),
     email: z.string().trim().toLowerCase().email("Enter a valid email address").max(255),
     phone: z
       .string()

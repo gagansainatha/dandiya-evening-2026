@@ -1,14 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useEffect } from "react";
 import { CalendarDays, MapPin, Ticket, GraduationCap, Music, Mic2, Sparkles, Store, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { RegistrationForm } from "@/components/RegistrationForm";
-import poster from "@/assets/dandiya-poster.jpg.asset.json";
+import festiveBackground from "@/assets/dandiya-evening-background.jpg";
 import logo from "@/assets/vvit-logo.png.asset.json";
 
-const TITLE = "Dandiya Evening 2026 — Register Free | VVIT Bengaluru";
+const TITLE = "Dandiya Evening 2026 — Register | VVIT Bengaluru";
 const DESC =
-  "Tradition Meets Togetherness. Dandiya Evening 2026 on Saturday, 24 October 2026 at Vijaya Vittala Institute Of Technology, Bengaluru. Free registration for VVIT students.";
+  "Tradition Meets Togetherness. Register for Dandiya Evening 2026 on Saturday, 24 October 2026 at Vijaya Vittala Institute Of Technology, Bengaluru.";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -25,7 +26,7 @@ export const Route = createFileRoute("/")({
 });
 
 function scrollToForm() {
-  document.getElementById("register")?.scrollIntoView({ behavior: "smooth" });
+  document.getElementById("register")?.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
 }
 
 const NAV = [
@@ -36,65 +37,73 @@ const NAV = [
 ] as const;
 
 function Index() {
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches || !("IntersectionObserver" in window)) return;
+    const sections = document.querySelectorAll<HTMLElement>("[data-reveal]");
+    const observer = new IntersectionObserver((entries) => {
+      for (const entry of entries) {
+        if (!entry.isIntersecting) continue;
+        entry.target.classList.add("is-revealed");
+        observer.unobserve(entry.target);
+      }
+    }, { threshold: 0.08 });
+    sections.forEach((section) => {
+      section.classList.add("reveal-pending");
+      observer.observe(section);
+    });
+    return () => {
+      observer.disconnect();
+      sections.forEach((section) => section.classList.remove("reveal-pending"));
+    };
+  }, []);
+
   return (
     <div className="min-h-screen">
       <header className="sticky top-0 z-40 border-b bg-background/80 backdrop-blur">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3">
-          <a href="#top" className="flex items-center gap-3">
-            <img src={logo.url} alt="Vijaya Vittala Institute Of Technology logo" className="h-10 w-10 rounded-full" />
-            <span className="font-display text-lg font-semibold leading-tight">Dandiya Evening 2026</span>
+          <a href="#top" className="flex min-w-0 items-center gap-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+            <img src={logo.url} alt="Vijaya Vittala Institute Of Technology logo" className="h-10 w-10 shrink-0 rounded-full" />
+            <span className="max-w-64 font-display text-sm font-semibold leading-tight lg:text-base">Vijaya Vittala Institute Of Technology</span>
           </a>
           <nav aria-label="Main" className="hidden gap-6 text-sm md:flex">
             {NAV.map(([label, id]) => (
-              <a key={id} href={`#${id}`} className="text-muted-foreground transition-colors hover:text-foreground">{label}</a>
+              <a key={id} href={`#${id}`} className="text-muted-foreground transition-colors duration-200 hover:text-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">{label}</a>
             ))}
           </nav>
-          <Button size="sm" onClick={scrollToForm}>Register Free</Button>
+          <Button size="sm" className="shrink-0 transition-all duration-200" onClick={scrollToForm}>Register</Button>
         </div>
       </header>
 
       <main id="top">
         {/* Hero */}
-        <section className="relative overflow-hidden drape-bg">
-          <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 py-14 md:grid-cols-[1.1fr_0.9fr] md:py-20">
-            <div className="fade-up space-y-6 text-center md:text-left">
-              <p className="text-sm uppercase tracking-[0.3em] text-gold">Vijaya Vittala Institute Of Technology presents</p>
-              <h1 className="text-5xl font-bold leading-[1.05] sm:text-6xl lg:text-7xl">
-                <span className="text-gold-gradient">Dandiya Evening</span>
-                <br />
-                <span className="text-foreground">2026</span>
-              </h1>
-              <p className="font-display text-2xl italic text-gold">Tradition Meets Togetherness</p>
-              <div className="festive-rule mx-auto w-32 md:mx-0" />
-              <div className="flex flex-col gap-3 text-base sm:flex-row sm:justify-center sm:gap-8 md:justify-start">
+        <section className="cinematic-hero relative isolate overflow-hidden" aria-label="Dandiya Evening 2026">
+          <img src={festiveBackground} alt="" aria-hidden="true" width={1920} height={1024} fetchPriority="high" className="hero-background absolute inset-0 -z-20 h-full w-full object-cover" />
+          <div className="hero-overlay absolute inset-0 -z-10" />
+          <div className="mx-auto flex min-h-[560px] max-w-6xl items-center justify-center px-4 py-16 sm:min-h-[620px] sm:py-20">
+            <div className="hero-content w-full max-w-4xl space-y-6 text-center">
+              <p className="hero-enter text-xs uppercase text-gold sm:text-sm">VIJAYA VITTALA INSTITUTE OF TECHNOLOGY PRESENTS</p>
+              <h1 className="hero-enter text-[44px] font-bold leading-[1.1] text-gold-gradient sm:text-6xl lg:text-7xl">Dandiya Evening <span className="block">2026</span></h1>
+              <p className="hero-enter font-display text-xl italic text-gold sm:text-2xl">Tradition Meets Togetherness</p>
+              <div className="hero-enter festive-rule mx-auto w-32" />
+              <div className="hero-enter flex flex-col gap-3 text-sm sm:flex-row sm:justify-center sm:gap-8 sm:text-base">
                 <span className="flex items-center justify-center gap-2"><CalendarDays className="h-5 w-5 text-saffron" aria-hidden="true" /> Saturday, 24 October 2026</span>
                 <span className="flex items-center justify-center gap-2"><MapPin className="h-5 w-5 text-magenta" aria-hidden="true" /> VVIT, Bengaluru</span>
               </div>
-              <div className="flex flex-col items-center gap-3 sm:flex-row md:justify-start">
-                <Button size="lg" className="px-10 text-base shadow-[var(--shadow-glow)]" onClick={scrollToForm}>Register Free</Button>
-                <span className="text-sm text-muted-foreground">For VVIT students · No fee</span>
+              <div className="hero-enter flex justify-center">
+                <Button size="lg" className="px-10 text-base shadow-[var(--shadow-glow)] transition-all duration-200 hover:-translate-y-0.5" onClick={scrollToForm}>Register</Button>
               </div>
-            </div>
-            <div className="fade-up mx-auto w-full max-w-sm">
-              <img
-                src={poster.url}
-                alt="Dandiya Evening 2026 poster: a couple dancing with dandiya sticks under lanterns and colourful drapes on campus at dusk"
-                className="aspect-[2/3] w-full rounded-2xl border object-cover shadow-[var(--shadow-glow)]"
-                width={854}
-                height={1281}
-              />
             </div>
           </div>
         </section>
 
         {/* Info */}
-        <section id="about" className="mx-auto max-w-6xl scroll-mt-20 px-4 py-16">
+        <section id="about" data-reveal className="mx-auto max-w-6xl scroll-mt-24 px-4 py-16">
           <h2 className="text-center text-3xl font-semibold sm:text-4xl">Event details</h2>
           <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {[
               { icon: CalendarDays, t: "Date", d: "Saturday, 24 October 2026", c: "text-saffron" },
               { icon: MapPin, t: "Venue", d: "Vijaya Vittala Institute Of Technology, Bengaluru", c: "text-magenta" },
-              { icon: Ticket, t: "Registration", d: "Free — individual registration", c: "text-gold" },
+              { icon: Ticket, t: "Registration", d: "Individual student registration", c: "text-gold" },
               { icon: GraduationCap, t: "Eligibility", d: "Students of Vijaya Vittala Institute Of Technology only", c: "text-saffron" },
             ].map(({ icon: Icon, t, d, c }) => (
               <div key={t} className="festive-card p-6">
@@ -107,7 +116,7 @@ function Index() {
         </section>
 
         {/* Participate */}
-        <section id="participate" className="scroll-mt-20 border-y bg-secondary/40 py-16">
+        <section id="participate" data-reveal className="scroll-mt-24 border-y bg-secondary/40 py-16">
           <div className="mx-auto max-w-6xl px-4">
             <h2 className="text-center text-3xl font-semibold sm:text-4xl">Be part of the celebration</h2>
             <p className="mx-auto mt-3 max-w-2xl text-center text-muted-foreground">
@@ -134,8 +143,8 @@ function Index() {
         </section>
 
         {/* Register */}
-        <section id="register" className="mx-auto max-w-6xl scroll-mt-20 px-4 py-16">
-          <h2 className="text-center text-3xl font-semibold sm:text-4xl">Register free</h2>
+        <section id="register" className="mx-auto max-w-6xl scroll-mt-24 px-4 py-16">
+          <h2 className="text-center text-3xl font-semibold sm:text-4xl">Register</h2>
           <p className="mx-auto mb-10 mt-3 max-w-xl text-center text-muted-foreground">
             One registration per student. It takes about two minutes.
           </p>
@@ -143,7 +152,7 @@ function Index() {
         </section>
 
         {/* FAQ */}
-        <section id="faq" className="mx-auto max-w-3xl scroll-mt-20 px-4 pb-20">
+        <section id="faq" data-reveal className="mx-auto max-w-3xl scroll-mt-24 px-4 pb-20">
           <h2 className="text-center text-3xl font-semibold sm:text-4xl">Frequently asked questions</h2>
           <Accordion type="single" collapsible className="mt-8">
             <AccordionItem value="who">
