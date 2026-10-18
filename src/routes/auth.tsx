@@ -14,6 +14,8 @@ export const Route = createFileRoute("/auth")({
       { property: "og:title", content: "Organiser sign in — Dandiya Evening 2026" },
       { property: "og:description", content: "Sign in for Dandiya Evening 2026 organisers." },
       { name: "robots", content: "noindex" },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: AuthPage,
