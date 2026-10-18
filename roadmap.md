@@ -1,4 +1,6 @@
 # Requested corrections
+- [ ] Add cinematic hero entrances, subtle background motion, navigation/card transitions, section reveals, and form-state animations without redesigning.
+- [ ] Verify animation, navigation, conditional fields, and reduced-motion behavior on desktop/mobile without inserting fake registrations.
 - [x] Correct college navbar branding and registration labels.
 - [x] Replace split poster hero with festive full-width imagery and subtle accessible animation.
 - [x] Restrict semester choices/validation to seven and preserve departments.
