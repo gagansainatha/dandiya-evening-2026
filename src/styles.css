@@ -70,6 +70,7 @@
   --gradient-gold-text: linear-gradient(180deg, oklch(0.95 0.06 90), oklch(0.8 0.15 70));
   --shadow-glow: 0 20px 60px -20px oklch(0.74 0.17 55 / 45%);
   --shadow-card: 0 10px 40px -15px oklch(0.05 0.02 268 / 70%);
+  --hero-overlay: linear-gradient(180deg, oklch(0.17 0.045 268 / 22%) 0%, oklch(0.17 0.045 268 / 56%) 32%, oklch(0.17 0.045 268 / 65%) 76%, var(--background) 100%);
 }
 
 @layer base {
@@ -124,4 +125,21 @@
 @keyframes fade-up {
   from { opacity: 0; transform: translateY(16px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+.hero-overlay { background: var(--hero-overlay); }
+.hero-background { object-position: center; animation: hero-drift 32s ease-in-out infinite alternate; }
+.hero-enter { animation: fade-up 0.7s ease-out both; }
+.hero-enter:nth-child(2) { animation-delay: 0.1s; }
+.hero-enter:nth-child(3) { animation-delay: 0.2s; }
+.hero-enter:nth-child(4) { animation-delay: 0.25s; }
+.hero-enter:nth-child(5) { animation-delay: 0.3s; }
+.hero-enter:nth-child(6) { animation-delay: 0.4s; }
+[data-reveal].reveal-pending { opacity: 0; transform: translateY(14px); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
+[data-reveal].is-revealed { opacity: 1; transform: none; }
+@keyframes hero-drift { from { transform: scale(1); } to { transform: scale(1.035); } }
+@media (max-width: 639px) { .hero-background { object-position: 52% center; } }
+@media (prefers-reduced-motion: reduce) {
+  .hero-enter, [data-reveal].reveal-pending { opacity: 1; transform: none; }
+  .hero-background { transform: none; }
 }

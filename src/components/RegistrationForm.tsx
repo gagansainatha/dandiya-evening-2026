@@ -9,6 +9,7 @@ import {
   SEMESTERS,
   YES_NO_MAYBE,
   registrationSchema,
+  semesterLabel,
 } from "@/lib/registration-schema";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -200,7 +201,7 @@ export function RegistrationForm() {
           <Label htmlFor="f-semester">Current semester<Req /></Label>
           <select id="f-semester" className={selectCls} value={form.semester} onChange={(e) => set("semester", e.target.value)} {...aria("semester")}>
             <option value="">Select semester</option>
-            {SEMESTERS.map((s) => <option key={s} value={s}>Semester {s}</option>)}
+            {SEMESTERS.map((s) => <option key={s} value={s}>{semesterLabel(s)}</option>)}
           </select>
           <FieldError id="e-semester" msg={err("semester")} />
         </div>
@@ -297,7 +298,7 @@ export function RegistrationForm() {
       )}
 
       <Button type="submit" size="lg" className="w-full text-base" disabled={saving}>
-        {saving ? "Saving your registration…" : "Register Free"}
+        {saving ? "Saving your registration…" : "Register"}
       </Button>
     </form>
   );
