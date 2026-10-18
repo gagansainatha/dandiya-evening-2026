@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
-import { CheckCircle2 } from "lucide-react";
+import { CheckCircle2, LoaderCircle } from "lucide-react";
 import { submitRegistration } from "@/lib/registration.functions";
 import {
   ACTIVITIES,
@@ -60,7 +60,7 @@ function Req() {
 
 function FieldError({ id, msg }: { id: string; msg?: string | undefined }) {
   if (!msg) return null;
-  return <p id={id} className="text-sm text-destructive">{msg}</p>;
+  return <p id={id} className="validation-feedback text-sm text-destructive">{msg}</p>;
 }
 
 function Pills({
@@ -135,7 +135,7 @@ export function RegistrationForm() {
       const res = await submit({ data: payload });
       if (res.ok) {
         setDone(true);
-        document.getElementById("register")?.scrollIntoView({ behavior: "smooth" });
+        document.getElementById("register")?.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
       } else {
         setServerError(res.error);
       }
@@ -148,7 +148,7 @@ export function RegistrationForm() {
 
   if (done) {
     return (
-      <div className="festive-card fade-up mx-auto max-w-xl p-8 text-center" role="status">
+      <div className="festive-card success-enter mx-auto max-w-xl p-8 text-center" role="status">
         <CheckCircle2 className="mx-auto h-14 w-14 text-success" aria-hidden="true" />
         <h3 className="mt-4 text-3xl font-semibold">You're registered!</h3>
         <p className="mt-3 text-muted-foreground">
@@ -167,7 +167,7 @@ export function RegistrationForm() {
     err(k) ? { "aria-invalid": true as const, "aria-describedby": `e-${k}` } : {};
 
   return (
-    <form onSubmit={onSubmit} noValidate className="festive-card mx-auto max-w-3xl space-y-8 p-6 sm:p-10">
+    <form onSubmit={onSubmit} noValidate aria-busy={saving} className="registration-form festive-card mx-auto max-w-3xl space-y-8 p-6 sm:p-10">
       <p className="text-sm text-muted-foreground">
         This information helps organisers estimate attendance and coordinate activities. Fields marked
         <span className="text-saffron"> *</span> are required.
@@ -253,7 +253,7 @@ export function RegistrationForm() {
         </fieldset>
 
         {showOther && (
-          <div className="space-y-2 fade-up">
+          <div className="space-y-2 field-enter">
             <Label htmlFor="f-other_activity">Please specify the other activity</Label>
             <Input id="f-other_activity" maxLength={200} value={form.other_activity} onChange={(e) => set("other_activity", e.target.value)} {...aria("other_activity")} />
             <FieldError id="e-other_activity" msg={err("other_activity")} />
@@ -263,7 +263,7 @@ export function RegistrationForm() {
         <Pills name="stall" legend="Interested in running a stall?" value={form.stall_interest} onChange={(v) => set("stall_interest", v)} />
 
         {showStall && (
-          <div className="space-y-2 fade-up">
+          <div className="space-y-2 field-enter">
             <Label htmlFor="f-stall_details">Proposed stall type, products or activity, and any special requirements</Label>
             <Textarea id="f-stall_details" rows={3} maxLength={1000} value={form.stall_details} onChange={(e) => set("stall_details", e.target.value)} {...aria("stall_details")} />
             <FieldError id="e-stall_details" msg={err("stall_details")} />
@@ -292,12 +292,13 @@ export function RegistrationForm() {
       </div>
 
       {serverError && (
-        <p role="alert" className="rounded-md border border-destructive/50 bg-destructive/10 p-3 text-sm text-destructive">
+        <p role="alert" className="validation-feedback rounded-md border border-destructive/50 bg-destructive/10 p-3 text-sm text-destructive">
           {serverError}
         </p>
       )}
 
-      <Button type="submit" size="lg" className="w-full text-base" disabled={saving}>
+      <Button type="submit" size="lg" className="register-button w-full text-base" disabled={saving}>
+        {saving && <LoaderCircle className="saving-icon h-4 w-4 shrink-0" aria-hidden="true" />}
         {saving ? "Saving your registration…" : "Register"}
       </Button>
     </form>
